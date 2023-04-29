@@ -1235,6 +1235,7 @@ PY_TO_JD = {
     "biang": "bx",
     "ke": "ke",
     "yao": "yz",
+    "n" : "xn"
 }
 
 if __name__ == "__main__":
