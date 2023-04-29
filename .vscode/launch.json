@@ -11,6 +11,14 @@
             "program": "count_all.py",
             "console": "integratedTerminal",
             "justMyCode": true
+        },
+        {
+            "name": "xkjd_tools",
+            "type": "python",
+            "request": "launch",
+            "program": "xkjd_tools.py",
+            "console": "integratedTerminal",
+            "justMyCode": true
         }
     ]
 }

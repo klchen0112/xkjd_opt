@@ -1,3 +1,30 @@
 * 写在前头
 1. 同时统计了英文和中文频率
 2. 因为自己使用分体键盘的缘故，空格、回车、制表符等特殊字符都在大拇指上。所以统计的时候如果统计"ab b"，二元组中 ab = 1 bb 1(即忽略了所有空白字符)。
+
+
+* 词库说明
+s 代表声母, y 代表韵母 , b 代表笔画
+1. s 高频率单字
+2. ss[bbbb] 低频率或者更高频率单字
+3. sb/sbb 高频率两字词
+3. sss[bbb] 三字词
+4. sysy[bb] 两字词
+   ssss[bb] 四字词
+* 飞键
+1. zh
+   1. 以a,e,o开头韵母归为q
+   2. 以i,u开头韵母归位f
+2. ch
+   1. 以a,e,o 开头归位j
+   2. 以i,u 开头归为w
+   3. o可以归位于w,但是w可以代表w，为高频
+3. uang
+   1. 与ian组合的声母很多，所以将uang只保留x的
+
+* 词库
+1. [[JiebaLexicon]][[https://github.com/17621192638/JiebaLexicon]]
+2. [[Chinese Name Corpus]][https://github.com/wainshine/Chinese-Names-Corpus/tree/master]]
+3. [[Chinese_from_dongxiexidian]][https://github.com/foowaa/Chinese_from_dongxiexidian]]
+4. [[chinese_chatbot_corpus][https://github.com/codemayq/chinese_chatbot_corpus]]
+5, [[fun_nlp][https://github.com/fighting41love/funNLP]]
