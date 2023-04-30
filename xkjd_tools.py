@@ -99,17 +99,22 @@ if __name__ == "__main__":
         for row in reader:
             char_or_words, frequency = row[0], row[1]
             word_len = len(char_or_words)
-            pinyin = lazy_pinyin(char_or_words)
-
             if word_len == 1:
                 if char_or_words in danzi_code_dict:
-                    for code in danzi_code_dict[char_or_words]:
-                        root_node.insert(code, char_or_words, frequency, word_len)
+                    pinyin = lazy_pinyin(char_or_words)
+                    code = PY_TO_JD[pinyin] + danzi_bihua_dict[char_or_words]
+                    root_node.insert(code, char_or_words, frequency, word_len)
             else:
+                pinyin = lazy_pinyin(char_or_words)
                 if word_len == 2:
                     if char_or_words[1] not in danzi_bihua_dict:
                         continue
                     if char_or_words[0] not in danzi_bihua_dict:
+                        continue
+                    short_code = (
+                        PY_TO_JD[pinyin[0]] + danzi_bihua_dict[char_or_words[1]][:2]
+                    )
+                    if root_node.insert(short_code, char_or_words, frequency, 3):
                         continue
                     code = (
                         PY_TO_JD[pinyin[0]]
