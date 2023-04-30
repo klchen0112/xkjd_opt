@@ -4,7 +4,8 @@ from collections import Counter
 from time import sleep
 import jieba
 from pypinyin import lazy_pinyin
-from multiprocessing import Pool, Queue, Manager, Process
+from multiprocessing import Queue, Process
+
 from data_loader import (
     wiki_zh_json_to_text_list,
     news_json_to_text_list,
@@ -63,7 +64,7 @@ def count_all_zh(text):
     zh_counter = Counter()
     text = text.lower()
     # 分词
-    words = jieba.lcut(text)
+    words = jieba.lcut(text, cut_all=False,use_paddle=True)
     for word in words:
         # 统计中文单字出现的次数
         if len(word) == 1 and "\u4e00" <= word <= "\u9fff":  # 判断是否为中文字符
@@ -102,12 +103,13 @@ def news_counter(que):
 def baike_counter(que):
     jieba.set_dictionary("data/jieba/dict.txt.big")
     jieba.load_userdict("data/jieba/user.dict")
-    jieba.enable_parallel()
+    # jieba.enable_parallel()
     zh_counter = Counter()
     for text in baike_to_text_list():
         zh_counter.update(count_all_zh(text))
     que.put(zh_counter, block=True)
     print("baike complete")
+
 
 def webtext_counter(que):
     jieba.set_dictionary("data/jieba/dict.txt.big")
@@ -129,6 +131,7 @@ def translation_counter(que):
         zh_counter.update(count_all_zh(text))
     que.put(zh_counter, block=True)
     print("translation_counter complete")
+
 
 def thucnews_counter(que):
     jieba.set_dictionary("data/jieba/dict.txt.big")
@@ -177,29 +180,21 @@ if __name__ == "__main__":
 
     write_procs = []
     write_procs.append(Process(target=wiki_zh_counter, args=(que,)))
-    write_procs[-1].start()
 
     write_procs.append(Process(target=news_counter, args=(que,)))
-    write_procs[-1].start()
 
     write_procs.append(Process(target=baike_counter, args=(que,)))
-    write_procs[-1].start()
 
     write_procs.append(Process(target=webtext_counter, args=(que,)))
-    write_procs[-1].start()
-
-    write_procs.append(Process(target=wiki_zh_counter, args=(que,)))
-    write_procs[-1].start()
 
     write_procs.append(Process(target=translation_counter, args=(que,)))
-    write_procs[-1].start()
 
     write_procs.append(Process(target=thucnews_counter, args=(que,)))
-    write_procs[-1].start()
 
     write_procs.append(Process(target=clean_chat_corpus_counter, args=(que,)))
-    write_procs[-1].start()
 
+    for write_proc in write_procs:
+        write_proc.start()
     # 等待所有写入任务完成
     for write_proc in write_procs:
         write_proc.join()

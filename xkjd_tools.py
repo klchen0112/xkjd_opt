@@ -62,7 +62,7 @@ def gen_final_dict(root: XKJDTree):
     with open("results/xkjd6/xkjd6.dict.yaml", "w") as dict_yaml:
         while not node_que.empty():
             now = node_que.get()
-            if char != "" and code != "":
+            if now.char != "" and now.code != "":
                 dict_yaml.write("{char}\t{code}\n".format(char=now.char, code=now.code))
             for child_list in now.children.values():
                 for child in child_list:
@@ -129,37 +129,20 @@ if __name__ == "__main__":
                     code_bihua = ""
                     find_fail = False
                     for i in range(word_len):
-                        if i == 3:
-                            if (
-                                "a" <= char_or_words[-1][0]
-                                and char_or_words[-1][0] <= "z"
-                            ):
-                                find_fail = True
-                                break
-                            code_py = code_py + PY_TO_JD[pinyin[-1]][0]
-                            if char_or_words[-1] not in danzi_bihua_dict:
-                                find_fail = True
-                                break
-                            code_bihua = (
-                                code_bihua + danzi_bihua_dict[char_or_words[-1]][0]
-                            )
+                        if char_or_words[i] not in danzi_bihua_dict:
+                            find_fail = True
                             break
-                        else:
-                            if char_or_words[i] not in danzi_bihua_dict:
-                                find_fail = True
-                                break
-                            code_py = code_py + PY_TO_JD[pinyin[i]][0]
-                            code_bihua = (
-                                code_bihua + danzi_bihua_dict[char_or_words[i]][0]
-                            )
+                        code_py = code_py + PY_TO_JD[pinyin[i]][0]
+                        code_bihua = (
+                            code_bihua + danzi_bihua_dict[char_or_words[i]][0]
+                        )
                     if not find_fail:
-                        code_py_len = len(code_py)
-                        code = code_py + code_bihua[: 6 - code_py_len]
+                        code = code_py + code_bihua
                         root_node.insert(
-                            code, char_or_words, frequency, min(word_len, 4)
+                            code, char_or_words, frequency, word_len
                         )
     print("insert complete")
     gen_final_dict(root_node)
 
-    with open("results/xkjd6/xkjd6.dict.yaml", "r") as dict_yaml:
-        line = dict_yaml.readlines()
+    # with open("results/xkjd6/xkjd6.dict.yaml", "r") as dict_yaml:
+    #     line = dict_yaml.readlines()
