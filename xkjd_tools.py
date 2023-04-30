@@ -120,8 +120,8 @@ if __name__ == "__main__":
                         code = (
                             PY_TO_JD[pinyin[0]]
                             + PY_TO_JD[pinyin[1]]
-                            + danzi_bihua_dict[char_or_words[0]][0]
-                            + danzi_bihua_dict[char_or_words[1]][0]
+                            + danzi_bihua_dict[char_or_words[0]][:2]
+                            + danzi_bihua_dict[char_or_words[1]][:2]
                         )
                         root_node.insert(code, char_or_words, frequency, 4)  # sysy
                 else:
@@ -134,7 +134,7 @@ if __name__ == "__main__":
                             break
                         code_py = code_py + PY_TO_JD[pinyin[i]][0]
                         code_bihua = (
-                            code_bihua + danzi_bihua_dict[char_or_words[i]][0]
+                            code_bihua + danzi_bihua_dict[char_or_words[i]][:2]
                         )
                     if not find_fail:
                         code = code_py + code_bihua
