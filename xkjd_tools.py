@@ -71,7 +71,6 @@ def gen_final_dict(root: XKJDTree):
                 for child in child_list:
                     node_que.put(child)
         dict_yaml.close()
-    print("gen dict complete")
 
 
 if __name__ == "__main__":
@@ -93,7 +92,7 @@ if __name__ == "__main__":
             pinyin = code[0:2]
             bihua = code[2:]
             danzi_bihua_dict[char] = bihua
-
+        fl.close()
     with open("./results/zh_counts.csv", "r", newline="", encoding="utf-8") as f:
         reader = csv.reader(f, delimiter="\t")
         next(reader, None)
@@ -110,24 +109,15 @@ if __name__ == "__main__":
                 if word_len == 2:
                     if char_or_words[1] not in danzi_bihua_dict:
                         continue
-                    if pinyin[0] not in PY_TO_JD:
-                        print(char_or_words)
-                        print(pinyin[0])
-                    short_code = (
-                        PY_TO_JD[pinyin[0]][0] + danzi_bihua_dict[char_or_words[1]][:2]
+                    if char_or_words[0] not in danzi_bihua_dict:
+                        continue
+                    code = (
+                        PY_TO_JD[pinyin[0]]
+                        + PY_TO_JD[pinyin[1]]
+                        + danzi_bihua_dict[char_or_words[0]][:2]
+                        + danzi_bihua_dict[char_or_words[1]][:2]
                     )
-                    if not root_node.insert(
-                        short_code, char_or_words, frequency, 2
-                    ):  # sb/sbb
-                        if char_or_words[0] not in danzi_bihua_dict:
-                            continue
-                        code = (
-                            PY_TO_JD[pinyin[0]]
-                            + PY_TO_JD[pinyin[1]]
-                            + danzi_bihua_dict[char_or_words[0]][:2]
-                            + danzi_bihua_dict[char_or_words[1]][:2]
-                        )
-                        root_node.insert(code, char_or_words, frequency, 4)  # sysy
+                    root_node.insert(code, char_or_words, frequency, 4)  # sysy
                 else:
                     code_py = ""
                     code_bihua = ""
@@ -141,8 +131,9 @@ if __name__ == "__main__":
                     if not find_fail:
                         code = code_py + code_bihua
                         root_node.insert(code, char_or_words, frequency, word_len)
+        f.close()
     print("insert complete")
     gen_final_dict(root_node)
-
+    print("gen dict complete")
     # with open("results/xkjd6/xkjd6.dict.yaml", "r") as dict_yaml:
     #     line = dict_yaml.readlines()
