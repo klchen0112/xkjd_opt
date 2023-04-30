@@ -16,30 +16,6 @@ from data_loader import (
 )
 
 
-def count_chars_and_ngrams(text):
-    char_counts = Counter()
-    two_gram_counts = Counter()
-    three_gram_counts = Counter()
-
-    text = text.lower()
-    # text = text.translate({ " " : None,
-    #      "\n" : None,
-    #      "\r" : None,
-    #      "\t":None,}
-    # )
-    char_counts.update(text)
-
-    split_content = text.split()
-    # Count tuples of 2 and 3
-    for word in split_content:
-        if len(word) > 1:
-            two_gram_counts.update([word[i : i + 2] for i in range(len(word) - 1)])
-        if len(word) > 2:
-            three_gram_counts.update([word[i : i + 3] for i in range(len(word) - 2)])
-
-    return char_counts, two_gram_counts, three_gram_counts
-
-
 def write_to_csv(counts, filename):
     with open(filename, "w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f, delimiter="\t")
@@ -108,7 +84,7 @@ def web_text_gen(str_que):
 
 
 def translation_text_gen(str_que):
-    for text in translation_to_text_list(with_en=False):
+    for text in translation_to_text_list(with_en=True):
         str_que.put(text)
     print("translation text add complete")
 
@@ -124,6 +100,29 @@ def clean_chat_corpus_text_gen(str_que):
         str_que.put(text)
     print("clean_chat_corpus add complete")
 
+def en_fiction_gen(str_que):
+    for root, dirs, files in os.walk("data/src/en"):
+        for fname in files:
+            if not fname.endswith(".txt"):
+                continue
+            fpath = os.path.join(root, fname)
+            with open(fpath,"r") as fl:
+                line = fl.readline()
+                while line:
+                    str_que.put(line)
+                    line = fl.readline()
+
+def zh_fiction_gen(str_que):
+    for root, dirs, files in os.walk("data/src/zh"):
+        for fname in files:
+            if not fname.endswith(".txt"):
+                continue
+            fpath = os.path.join(root, fname)
+            with open(fpath,"r") as fl:
+                line = fl.readline()
+                while line:
+                    str_que.put(line)
+                    line = fl.readline()
 
 def update_count(cont_que):
     all_zh_counter = Counter()
@@ -139,6 +138,7 @@ def update_count(cont_que):
     write_to_csv(all_zh_counter, "results/zh_counts.csv")
 
 
+
 if __name__ == "__main__":
     # char_counts,two_gram_counts,three_gram_counts  = count_chars_and_ngrams( './data/src/en')
     # write_to_csv(char_counts, 'results/char_counts.csv')
@@ -146,10 +146,10 @@ if __name__ == "__main__":
     # write_to_csv(three_gram_counts, 'results/three_gram_counts.csv')
 
     #
-    str_que_size = 10
+    str_que_size = 8
     str_que = Queue(str_que_size)
 
-    max_cont_size = 10
+    max_cont_size = 3
     cont_que = Queue(max_cont_size)
 
     write_procs = []
@@ -167,11 +167,14 @@ if __name__ == "__main__":
 
     write_procs.append(Process(target=clean_chat_corpus_text_gen, args=(str_que,)))
 
+    write_procs.append(Process(target=en_fiction_gen, args=(str_que,)))
+
+    write_procs.append(Process(target=zh_fiction_gen, args=(str_que,)))
     for write_proc in write_procs:
         write_proc.start()
-
+    n_counter = 6
     counter_gen_procs = []
-    for i in range(8):
+    for i in range(n_counter):
         counter_gen_procs.append(Process(target=count_all_zh, args=(str_que, cont_que)))
     for cont_proc in counter_gen_procs:
         cont_proc.start()
@@ -181,7 +184,7 @@ if __name__ == "__main__":
     # # 等待所有写入任务完成
     for write_proc in write_procs:
         write_proc.join()
-    for i in range(8):
+    for i in range(n_counter):
         str_que.put(None)
     for cont_proc in counter_gen_procs:
         cont_proc.join()
