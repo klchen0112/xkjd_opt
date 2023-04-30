@@ -1,8 +1,11 @@
 import csv
 import os
-from pypinyin import lazy_pinyin
+from pypinyin import lazy_pinyin, load_phrases_dict
+from pypinyin_dict.phrase_pinyin_data import large_pinyin
 from preset import PY_TO_JD, JD_TO_PY
 from queue import Queue
+
+large_pinyin.load()
 
 
 class XKJDTree:
@@ -75,6 +78,7 @@ if __name__ == "__main__":
     danzi_bihua_dict = {}
     danzi_code_dict = {}
     root_node = XKJDTree(char="", code="", freq=-1)
+    load_phrases_dict({"选重": [["xuǎn"], ["chóng"]]})
     with open("./data/src/xkjd6/xkjd6.danzi.final.txt", "r") as fl:
         for line in fl.readlines():
             char, code = line.split("\t")
@@ -133,14 +137,10 @@ if __name__ == "__main__":
                             find_fail = True
                             break
                         code_py = code_py + PY_TO_JD[pinyin[i]][0]
-                        code_bihua = (
-                            code_bihua + danzi_bihua_dict[char_or_words[i]][:2]
-                        )
+                        code_bihua = code_bihua + danzi_bihua_dict[char_or_words[i]][:2]
                     if not find_fail:
                         code = code_py + code_bihua
-                        root_node.insert(
-                            code, char_or_words, frequency, word_len
-                        )
+                        root_node.insert(code, char_or_words, frequency, word_len)
     print("insert complete")
     gen_final_dict(root_node)
 
