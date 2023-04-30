@@ -27,9 +27,9 @@ s 代表声母, y 代表韵母 , b 代表笔画
 3. uang
    1. 与ian组合的声母很多，所以将uang只保留x的
 
-* 词库
-1. [[JiebaLexicon]][[https://github.com/17621192638/JiebaLexicon]]
-2. [[Chinese Name Corpus]][https://github.com/wainshine/Chinese-Names-Corpus/tree/master]]
-3. [[Chinese_from_dongxiexidian]][https://github.com/foowaa/Chinese_from_dongxiexidian]]
-4. [[chinese_chatbot_corpus][https://github.com/codemayq/chinese_chatbot_corpus]]
-5, [[fun_nlp][https://github.com/fighting41love/funNLP]]
+* 词库及语料库
+1. [[https://github.com/17621192638/JiebaLexicon][JiebaLexicon]]
+2. [[https://github.com/wainshine/Chinese-Names-Corpus/tree/master][Chinese Name Corpus]]
+3. [[https://github.com/foowaa/Chinese_from_dongxiexidian][Chinese_from_dongxiexidian]]
+4. [[https://github.com/codemayq/chinese_chatbot_corpus][chinese_chatbot_corpus]]
+5. [[https://github.com/fighting41love/funNLP][funNLP]]
