@@ -62,7 +62,7 @@ def gen_final_dict(root: XKJDTree):
     os.makedirs("results/xkjd6", exist_ok=True)
     node_que = Queue()
     node_que.put(root)
-    with open("results/xkjd6/xkjd6.dict.yaml", "w") as dict_yaml:
+    with open("results/xkjd6/xkjd6.dict.yaml", "w+") as dict_yaml:
         while not node_que.empty():
             now = node_que.get()
             if now.char != "" and now.code != "":
@@ -101,8 +101,13 @@ if __name__ == "__main__":
             word_len = len(char_or_words)
             if word_len == 1:
                 if char_or_words in danzi_code_dict:
-                    pinyin = lazy_pinyin(char_or_words)
-                    code = PY_TO_JD[pinyin] + danzi_bihua_dict[char_or_words]
+                    pinyin = lazy_pinyin(char_or_words)[0]
+
+                    if pinyin not in PY_TO_JD:
+                        jd_py = danzi_code_dict[char_or_words][0][:2]
+                    else:
+                        jd_py = PY_TO_JD[pinyin]
+                    code = jd_py + danzi_bihua_dict[char_or_words]
                     root_node.insert(code, char_or_words, frequency, word_len)
             else:
                 pinyin = lazy_pinyin(char_or_words)
@@ -112,9 +117,11 @@ if __name__ == "__main__":
                     if char_or_words[0] not in danzi_bihua_dict:
                         continue
                     short_code = (
-                        PY_TO_JD[pinyin[0]] + danzi_bihua_dict[char_or_words[1]][:2]
+                        PY_TO_JD[pinyin[0]][0] + danzi_bihua_dict[char_or_words[1]][:2]
                     )
-                    if root_node.insert(short_code, char_or_words, frequency, 3):
+                    if char_or_words == "神奇":
+                        print("")
+                    if root_node.insert(short_code, char_or_words, frequency, 2):
                         continue
                     code = (
                         PY_TO_JD[pinyin[0]]

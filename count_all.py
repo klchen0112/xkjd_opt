@@ -100,17 +100,19 @@ def clean_chat_corpus_text_gen(str_que):
         str_que.put(text)
     print("clean_chat_corpus add complete")
 
+
 def en_fiction_gen(str_que):
     for root, dirs, files in os.walk("data/src/en"):
         for fname in files:
             if not fname.endswith(".txt"):
                 continue
             fpath = os.path.join(root, fname)
-            with open(fpath,"r") as fl:
+            with open(fpath, "r") as fl:
                 line = fl.readline()
                 while line:
                     str_que.put(line)
                     line = fl.readline()
+
 
 def zh_fiction_gen(str_que):
     for root, dirs, files in os.walk("data/src/zh"):
@@ -118,11 +120,12 @@ def zh_fiction_gen(str_que):
             if not fname.endswith(".txt"):
                 continue
             fpath = os.path.join(root, fname)
-            with open(fpath,"r") as fl:
+            with open(fpath, "r") as fl:
                 line = fl.readline()
                 while line:
                     str_que.put(line)
                     line = fl.readline()
+
 
 def update_count(cont_que):
     all_zh_counter = Counter()
@@ -136,7 +139,6 @@ def update_count(cont_que):
             sleep(1)
     print("counter complete")
     write_to_csv(all_zh_counter, "results/zh_counts.csv")
-
 
 
 if __name__ == "__main__":
@@ -153,21 +155,22 @@ if __name__ == "__main__":
     cont_que = Queue(max_cont_size)
 
     write_procs = []
+
+    write_procs.append(Process(target=clean_chat_corpus_text_gen, args=(str_que,)))
+
+    write_procs.append(Process(target=thucnews_text_gen, args=(str_que,)))
+
     write_procs.append(Process(target=wiki_zh_text_gen, args=(str_que,)))
 
-    write_procs.append(Process(target=news_text_gen, args=(str_que,)))
-
     write_procs.append(Process(target=baike_text_gen, args=(str_que,)))
+
+    write_procs.append(Process(target=news_text_gen, args=(str_que,)))
 
     write_procs.append(Process(target=web_text_gen, args=(str_que,)))
 
     write_procs.append(Process(target=translation_text_gen, args=(str_que,)))
 
-    write_procs.append(Process(target=thucnews_text_gen, args=(str_que,)))
-
-    write_procs.append(Process(target=clean_chat_corpus_text_gen, args=(str_que,)))
-
-    write_procs.append(Process(target=en_fiction_gen, args=(str_que,)))
+    # write_procs.append(Process(target=en_fiction_gen, args=(str_que,)))
 
     write_procs.append(Process(target=zh_fiction_gen, args=(str_que,)))
     for write_proc in write_procs:

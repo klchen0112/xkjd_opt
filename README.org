@@ -6,11 +6,10 @@
 * 词库说明
 ** 规则
 s 代表声母, y 代表韵母 , b 代表笔画
-2. sy[bbbb] 低频率或者更高频率单字
-3. sb/sbb 高频率两字词
+1. sy[bbbb] 低频率或者更高频率单字
+2. sysy[bbbb] 两字词
 3. sss[bbbbbb] 三字词
-4. sysy[bbbb] 两字词
-   ssss[bbbbbbbb] 四字词
+4, ssss[bbbbbbbb] 四字词
 ** 编码规则
 1. 单字采用 sybbbb b最多四位的编码
 2. 多字词
