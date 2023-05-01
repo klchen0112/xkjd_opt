@@ -57,7 +57,7 @@ def xkjd_process(str_pre_que, str_after_que, words_dict):
         text = str_pre_que.get()
         if isinstance(text, str):
             result_str = ""
-            for word in jieba.lcut(text):
+            for word in jieba.cut(text):
                 if word in words_dict:
                     result_str += words_dict[word]
                 else:
