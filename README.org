@@ -30,6 +30,10 @@ s 代表声母, y 代表韵母 , b 代表笔画
 1. count_all.py 读取语料库内容生成 results/zh_counts.csv
 2. xkjd_tools.py 依据results/zh_counts.csv 生成 results/xkjd6/xkjd6.dict.yaml
 3. xkjd6_gram_gen 依据 results/xkjd6/xkjd6.dict.yaml和 语料库生成 字母使用频率和2-gram 频率 （键盘布局优化使用）
+* 布局
+1. 依据 1-gram和2-gram
+左手为 y,d,e,j 右手为 
+
 * 词库及语料库
 1. [[https://github.com/17621192638/JiebaLexicon][JiebaLexicon]]
 2. [[https://github.com/wainshine/Chinese-Names-Corpus/tree/master][Chinese Name Corpus]]
