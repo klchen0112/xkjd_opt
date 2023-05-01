@@ -61,7 +61,25 @@ def xkjd_process(str_pre_que, str_after_que, words_dict):
                 if word in words_dict:
                     result_str += words_dict[word]
                 else:
-                    result_str += word
+                    word_len = len(word)
+                    i = 0
+                    while i < word_len:
+                        j = word_len
+                        while j > i:
+                            tmp_word = word[i:j]
+                            if tmp_word in words_dict:
+                                result_str += words_dict[tmp_word]
+                                break
+                            else:
+                                j = j - 1
+                        if i == j:
+                            if word[i] in words_dict:
+                                result_str += words_dict[word[i]]
+                            else:
+                                result_str = result_str + word[i]
+                            i = i + 1
+                        else:
+                            i = j
             str_after_que.put(result_str)
         elif text is None:
             break
@@ -93,9 +111,9 @@ if __name__ == "__main__":
 
     write_procs.append(Process(target=wiki_zh_text_gen, args=(str_que,)))
 
-    write_procs.append(Process(target=news_text_gen, args=(str_que,)))
-
     write_procs.append(Process(target=baike_text_gen, args=(str_que,)))
+
+    write_procs.append(Process(target=news_text_gen, args=(str_que,)))
 
     write_procs.append(Process(target=web_text_gen, args=(str_que,)))
 

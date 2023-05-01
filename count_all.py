@@ -46,10 +46,10 @@ def count_all_zh(str_que, counter_que):
             words = jieba.lcut(text, cut_all=False)
             for word in words:
                 # 统计中文单字出现的次数
-                if len(word) == 1 and "\u4e00" <= word <= "\u9fff":  # 判断是否为中文字符
+                if len(word) == 1 and "\u4e00" <= word and word <= "\u9fff":  # 判断是否为中文字符
                     zh_counter[word] += 1
                 # 统计中文单词出现的次数
-                elif "\u4e00" <= word[0] <= "\u9fff":  # 判断是否以中文字符开头
+                elif "\u4e00" <= word[0] and word[0] <= "\u9fff":  # 判断是否以中文字符开头
                     zh_counter[word] += 1
             counter_que.put(zh_counter)
         elif text is None:

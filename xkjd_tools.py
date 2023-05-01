@@ -143,6 +143,14 @@ if __name__ == "__main__":
                     if not find_fail:
                         code = code_py + code_bihua
                         root_node.insert(code, char_or_words, frequency, word_len)
+        for char, bihua_code in danzi_bihua_dict.items():
+            pinyin = lazy_pinyin(char)[0]
+            if pinyin in PY_TO_JD:
+                jd_py = PY_TO_JD[pinyin]
+            else:
+                jd_py = danzi_code_dict[pinyin][0][:2]
+            code = jd_py + bihua_code
+            root_node.insert(code, char, 1, 2)
         f.close()
     print("insert complete")
     gen_final_dict(root_node)
