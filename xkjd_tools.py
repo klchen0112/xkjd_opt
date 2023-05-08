@@ -119,8 +119,6 @@ if __name__ == "__main__":
                     short_code = (
                         PY_TO_JD[pinyin[0]][0] + danzi_bihua_dict[char_or_words[1]][:2]
                     )
-                    if char_or_words == "神奇":
-                        print("")
                     if root_node.insert(short_code, char_or_words, frequency, 2):
                         continue
                     code = (

@@ -43,8 +43,7 @@ def count_all_zh(str_que, counter_que):
             zh_counter = Counter()
             text = text.lower()
             # 分词
-            words = jieba.lcut(text, cut_all=False)
-            for word in words:
+            for word in jieba.cut(text, cut_all=False, HMM=False):
                 # 统计中文单字出现的次数
                 if len(word) == 1 and "\u4e00" <= word and word <= "\u9fff":  # 判断是否为中文字符
                     zh_counter[word] += 1
@@ -112,7 +111,7 @@ def en_fiction_gen(str_que):
                 while line:
                     str_que.put(line)
                     line = fl.readline()
-
+    print("en fiction complete")
 
 def zh_fiction_gen(str_que):
     for root, dirs, files in os.walk("data/src/zh"):
@@ -120,12 +119,12 @@ def zh_fiction_gen(str_que):
             if not fname.endswith(".txt"):
                 continue
             fpath = os.path.join(root, fname)
-            with open(fpath, "r") as fl:
+            with open(fpath, "r",encoding='utf-8') as fl:
                 line = fl.readline()
                 while line:
                     str_que.put(line)
                     line = fl.readline()
-
+    print("zh fiction complete")
 
 def update_count(cont_que):
     all_zh_counter = Counter()
@@ -175,7 +174,7 @@ if __name__ == "__main__":
     write_procs.append(Process(target=zh_fiction_gen, args=(str_que,)))
     for write_proc in write_procs:
         write_proc.start()
-    n_counter = 6
+    n_counter = 10
     counter_gen_procs = []
     for i in range(n_counter):
         counter_gen_procs.append(Process(target=count_all_zh, args=(str_que, cont_que)))

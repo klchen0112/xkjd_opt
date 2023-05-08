@@ -119,7 +119,7 @@ if __name__ == "__main__":
 
     write_procs.append(Process(target=translation_text_gen, args=(str_que,)))
 
-    write_procs.append(Process(target=en_fiction_gen, args=(str_que,)))
+    # write_procs.append(Process(target=en_fiction_gen, args=(str_que,)))
 
     write_procs.append(Process(target=zh_fiction_gen, args=(str_que,)))
     for write_proc in write_procs:
