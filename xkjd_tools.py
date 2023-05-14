@@ -5,7 +5,7 @@ from pypinyin_dict.phrase_pinyin_data import large_pinyin
 from preset import PY_TO_JD, JD_TO_PY
 from queue import Queue
 
-large_pinyin.load()
+
 
 
 class XKJDTree:
@@ -77,7 +77,9 @@ if __name__ == "__main__":
     danzi_bihua_dict = {}
     danzi_code_dict = {}
     root_node = XKJDTree(char="", code="", freq=-1)
-    load_phrases_dict({"选重": [["xuǎn"], ["chóng"]]})
+    large_pinyin.load()
+    load_phrases_dict({"选重": [["xuǎn"], ["chóng"]],
+                       '重命名': [["chóng"],["mìng"],["míng"]]})
     with open("./data/src/xkjd6/xkjd6.danzi.final.txt", "r") as fl:
         for line in fl.readlines():
             char, code = line.split("\t")
