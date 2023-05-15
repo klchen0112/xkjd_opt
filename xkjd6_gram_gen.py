@@ -1,3 +1,4 @@
+from pandas import cut
 from count_all import (
     wiki_zh_text_gen,
     news_text_gen,
@@ -57,7 +58,7 @@ def xkjd_process(str_pre_que, str_after_que, words_dict):
         text = str_pre_que.get()
         if isinstance(text, str):
             result_str = ""
-            for word in jieba.cut(text):
+            for word in jieba.cut(text, cut_all=False, HMM=True):
                 if word in words_dict:
                     result_str += words_dict[word]
                 else:

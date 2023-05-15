@@ -43,9 +43,11 @@ def count_all_zh(str_que, counter_que):
             zh_counter = Counter()
             text = text.lower()
             # 分词
-            for word in jieba.cut(text, cut_all=False, HMM=False):
+            for word in jieba.cut(text, cut_all=False, HMM=True):
                 # 统计中文单字出现的次数
-                if len(word) == 1 and "\u4e00" <= word and word <= "\u9fff":  # 判断是否为中文字符
+                if (
+                    len(word) == 1 and "\u4e00" <= word and word <= "\u9fff"
+                ):  # 判断是否为中文字符
                     zh_counter[word] += 1
                 # 统计中文单词出现的次数
                 elif "\u4e00" <= word[0] and word[0] <= "\u9fff":  # 判断是否以中文字符开头
@@ -83,7 +85,7 @@ def web_text_gen(str_que):
 
 
 def translation_text_gen(str_que):
-    for text in translation_to_text_list(with_en=True):
+    for text in translation_to_text_list(with_en=False):
         str_que.put(text)
     print("translation text add complete")
 
@@ -113,18 +115,20 @@ def en_fiction_gen(str_que):
                     line = fl.readline()
     print("en fiction complete")
 
+
 def zh_fiction_gen(str_que):
     for root, dirs, files in os.walk("data/src/zh"):
         for fname in files:
             if not fname.endswith(".txt"):
                 continue
             fpath = os.path.join(root, fname)
-            with open(fpath, "r",encoding='utf-8') as fl:
+            with open(fpath, "r", encoding="utf-8") as fl:
                 line = fl.readline()
                 while line:
                     str_que.put(line)
                     line = fl.readline()
     print("zh fiction complete")
+
 
 def update_count(cont_que):
     all_zh_counter = Counter()
