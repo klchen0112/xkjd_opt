@@ -1,11 +1,10 @@
 import csv
 import os
 from pypinyin import lazy_pinyin, load_phrases_dict
+import pypinyin
 from pypinyin_dict.phrase_pinyin_data import large_pinyin
 from preset import PY_TO_JD, JD_TO_PY
 from queue import Queue
-
-
 
 
 class XKJDTree:
@@ -78,8 +77,9 @@ if __name__ == "__main__":
     danzi_code_dict = {}
     root_node = XKJDTree(char="", code="", freq=-1)
     large_pinyin.load()
-    load_phrases_dict({"选重": [["xuǎn"], ["chóng"]],
-                       '重命名': [["chóng"],["mìng"],["míng"]]})
+    load_phrases_dict(
+        {"选重": [["xuǎn"], ["chóng"]], "重命名": [["chóng"], ["mìng"], ["míng"]]}
+    )
     with open("./data/src/xkjd6/xkjd6.danzi.final.txt", "r") as fl:
         for line in fl.readlines():
             char, code = line.split("\t")
@@ -144,13 +144,16 @@ if __name__ == "__main__":
                         code = code_py + code_bihua
                         root_node.insert(code, char_or_words, frequency, word_len)
         for char, bihua_code in danzi_bihua_dict.items():
-            pinyin = lazy_pinyin(char)[0]
-            if pinyin in PY_TO_JD:
-                jd_py = PY_TO_JD[pinyin]
-            else:
-                jd_py = danzi_code_dict[pinyin][0][:2]
-            code = jd_py + bihua_code
-            root_node.insert(code, char, 1, 2)
+            for pinyin in pypinyin.pinyin(
+                char, style=pypinyin.Style.NORMAL, heteronym=True
+            )[0]:
+                if pinyin in PY_TO_JD:
+                    jd_py = PY_TO_JD[pinyin]
+                else:
+                    print(char, bihua_code)
+                    continue
+                code = jd_py + bihua_code
+                root_node.insert(code, char, 1, 2)
         f.close()
     print("insert complete")
     gen_final_dict(root_node)
