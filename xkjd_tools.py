@@ -118,6 +118,9 @@ if __name__ == "__main__":
                         continue
                     if char_or_words[0] not in danzi_bihua_dict:
                         continue
+                    short_pinyin = PY_TO_JD[pinyin[0]][0] + PY_TO_JD[pinyin[1]][0]
+                    if short_pinyin not in JD_TO_PY and root_node.insert(short_pinyin, char_or_words, frequency, 2):
+                        continue
                     short_code = (
                         PY_TO_JD[pinyin[0]][0] + danzi_bihua_dict[char_or_words[1]][:2]
                     )
